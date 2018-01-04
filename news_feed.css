@@ -1,0 +1,26 @@
+
+#sender{
+    float: right !important;
+}
+#sender span{
+    float: right !important;
+}
+#recipient{
+    float: left !important;
+    background-color:whitesmoke;
+    border-radius: 5px;
+    padding-top: 2px;
+}
+#myModal{
+    max-height: 500px !important;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}

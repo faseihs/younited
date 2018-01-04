@@ -1,0 +1,19 @@
+.maindiv{
+    min-height: 100vh !important;
+    background-image: url(image.jpg) !important;
+}
+
+.brand{
+    z-index:1 !important;
+    color: #00BFFF !important;
+}
+
+.motto h1{
+    z-index: 1 !important;
+    margin-top:200px !important;
+    color: #00BFFF !important;
+}
+.motto h3{
+    z-index: 1 !important;
+    background-color: #000000 !important;
+}
