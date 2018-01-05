@@ -3,15 +3,63 @@ session_start();
 if(!isset($_SESSION['email'])){
     header('Location :login-form.html');
 }
+require_once("pdo_database.php");
+$email=$_SESSION['email'];
+$id=$_SESSION['uid'];
 if(isset($_POST['update'])){
-    $name=$_POST['name'];
-    $bday=$_POST['bday'];
-    $email=$_POST['email'];
-    $city=$_POST['city'];
-    $institute=$_POST['institute'];
-    $age=$_POST['age'];
-    $address=$_POST['address'];
+    $new_name=$_POST['name'];
+    $new_dob=$_POST['bday'];
+    $new_email=$_POST['email'];
+    $new_city=$_POST['city'];
+    $new_institute=$_POST['institute'];
+    $new_age=$_POST['age'];
+    $new_address=$_POST['address'];
+
+    //Inserting into Users Code
+    
+    $ins=$dbCon->prepare("UPDATE users SET name =:name , email=:email , dob=:dob WHERE email=:old_email");
+    $ins->bindParam(':name',$new_name);
+	$ins->bindParam(':email',$new_email);
+    $ins->bindParam(':old_email',$email);
+    $ins->bindParam(':dob',$new_dob);
+    $ins->execute();
+
+    //Inserting into Profile Code
+
+    $ins=$dbCon->prepare("UPDATE profile SET City =:city , Age=:age , Address=:address , Institute=:inst WHERE id=:id");
+    $ins->bindParam(':city',$new_city);
+	$ins->bindParam(':age',$new_age);
+    $ins->bindParam(':address',$new_address);
+    $ins->bindParam(':inst',$new_institute;
+    $ins->execute();
+
 }
+
+
+//Calling for Data
+	
+$stmt = $dbCon->prepare("SELECT * FROM users WHERE email = :email");
+$stmt->bindParam(':email',$email);
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$e_id=$results[0]['id'];
+$e_name=$results[0]['name'];
+$e_email=$results[0]['email'];
+$e_dob=$results[0]['dob'];
+
+$stmt1 = $dbCon->prepare("SELECT * FROM profile WHERE id = :id");
+$stmt1->bindParam(':id',$e_id);
+$results1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$e_city=$results1[0]['City'];
+$e_age=$results1[0]['Age'];
+$e_address=$results1[0]['Address'];
+$e_institute=$results1[0]['Institute'];
+
+
+//End Calling Data Part
+
+
 ?>
 
 <!doctype html>
@@ -139,40 +187,40 @@ if(isset($_POST['update'])){
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Name</label>
-                                        <input name="name" required type="text" class="form-control" value="Ali Danish">
+                                        <input name="name" required type="text" class="form-control" value="<?php echo $e_name ?>">
                                     </div>
                                     <div class="col-md-6">
                                             <label>Birthday</label>
-                                            <input name="bday" required class="datepicker form-control" type="text" value="01-01-18">
+                                            <input name="dob" required class="datepicker form-control" type="text" value="<?php echo $e_dob ?>">
                                         </div>
                                 </div>
 
                                 <div class="row">
                                         <div class="col-md-6">
                                                 <label>Email</label>
-                                                <input name="email" required type="email" class="form-control" value="danish000@gmail.com">
+                                                <input name="email" required type="email" class="form-control" value="<?php echo $e_email ?>">
                                             </div>
                                     
                                     <div class="col-md-6">
                                         <label>City</label>
-                                        <input name="city" required type="text" class="form-control" value="Lahore">
+                                        <input name="city" required type="text" class="form-control" value="<?php echo $e_city ?>">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Age</label>
-                                        <input name="age" required type="number" class="form-control" value="21">
+                                        <input name="age" required type="number" class="form-control" value="<?php echo $e_age ?>">
                                     </div>
                                     <div class="col-md-6">
                                         <label>Address</label>
-                                        <input name="address" required type="text" class="form-control" value="Razi-II">
+                                        <input name="address" required type="text" class="form-control" value="<?php echo $e_address ?>">
                                     </div>
                                     
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Institue</label>
-                                        <input name="institute" required type="text" class="form-control" value="NUST">
+                                        <input name="institute" required type="text" class="form-control" value="<?php echo $e_institute ?>">
                                     </div>
                                     <div class="col-md-6">
                                         <label>Profile Photo</label>
