@@ -185,7 +185,7 @@
                 </ul>
             </nav>
             <div class="copyright pull-right">
-                &copy; BESE-6B Students
+                &copy; BESE-6B
             </div>
         </div>
     </footer>
