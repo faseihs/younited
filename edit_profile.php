@@ -1,3 +1,19 @@
+<?php
+session_start();
+if(!isset($_SESSION['email'])){
+    header('Location :login-form.html');
+}
+if(isset($_POST['update'])){
+    $name=$_POST['name'];
+    $bday=$_POST['bday'];
+    $email=$_POST['email'];
+    $city=$_POST['city'];
+    $institute=$_POST['institute'];
+    $age=$_POST['age'];
+    $address=$_POST['address'];
+}
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -119,53 +135,53 @@
                 </div>     
                 <div class="row">
                         <div class="col-md-8 col-md-offset-2">
-                            <form class="contact-form">
+                            <form action="edit_profile.php" method="post" class="contact-form">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Name</label>
-                                        <input required type="text" class="form-control" value="Ali Danish">
+                                        <input name="name" required type="text" class="form-control" value="Ali Danish">
                                     </div>
                                     <div class="col-md-6">
                                             <label>Birthday</label>
-                                            <input required class="datepicker form-control" type="text" value="01-01-18">
+                                            <input name="bday" required class="datepicker form-control" type="text" value="01-01-18">
                                         </div>
                                 </div>
 
                                 <div class="row">
                                         <div class="col-md-6">
                                                 <label>Email</label>
-                                                <input required type="email" class="form-control" value="danish000@gmail.com">
+                                                <input name="email" required type="email" class="form-control" value="danish000@gmail.com">
                                             </div>
                                     
                                     <div class="col-md-6">
                                         <label>City</label>
-                                        <input required type="text" class="form-control" value="Lahore">
+                                        <input name="city" required type="text" class="form-control" value="Lahore">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Age</label>
-                                        <input required type="number" class="form-control" value="21">
+                                        <input name="age" required type="number" class="form-control" value="21">
                                     </div>
                                     <div class="col-md-6">
                                         <label>Address</label>
-                                        <input required type="text" class="form-control" value="Razi-II">
+                                        <input name="address" required type="text" class="form-control" value="Razi-II">
                                     </div>
                                     
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Institue</label>
-                                        <input required type="text" class="form-control" value="NUST">
+                                        <input name="institute" required type="text" class="form-control" value="NUST">
                                     </div>
                                     <div class="col-md-6">
                                         <label>Profile Photo</label>
-                                        <input  type="file" accept="image/*"  class="form-control" placeholder="New Profile Photo">
+                                        <input name="profile_pic" type="file" accept="image/*"  class="form-control" placeholder="New Profile Photo">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 col-md-offset-4">
-                                        <button class="btn btn-danger btn-block btn-lg btn-fill">Update</button>
+                                        <button type="submit" id="update" class="btn btn-danger btn-block btn-lg btn-fill">Update</button>
                                     </div>
                                 </div>
                             </form>

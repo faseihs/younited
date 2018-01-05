@@ -83,15 +83,15 @@
                                     <ul class="dropdown-menu dropdown-primary dropdown-menu-right">
                                       <li class="dropdown-header">User Options</li>
                                       <li class="dropdown-submenu">
-                                          <a class="test" style="color:black;" href="#">Profile &nbsp;<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+                                          <a class="test" href="#">Profile &nbsp;<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
                                           <ul class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                              <li><a style="color:black;"  href="#">View</a></li>
-                                              <li><a style="color:black;"  href="#">Edit</a></li>
+                                              <li><a tab-index="-1" href="#">View</a></li>
+                                              <li><a tab-index="-1" href="#">Edit</a></li>
                                           </ul>
                                         </li>
-                                      <li><a style="color:black;" href="#">Search For Friends</a></li>
+                                      <li><a href="#">Search For Friends</a></li>
                                       <li class="divider"></li>
-                                      <li><a style="color:black;" href="#">Change Password</a></li>
+                                      <li><a href="#">Change Password</a></li>
                                     </ul>
                             </li>
                         <li>
@@ -100,7 +100,8 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                           <li>
-                                <input type="text" style="margin-top:10px;" value="" placeholder="Search" class="form-control text-center" />
+                                <input type="text" style="margin-top:10px;" value="" placeholder="Search" id = "search" class="form-control text-center" />
+								<p id = "results"></p>
                           </li>
                      </ul>
                   </div><!-- /.navbar-collapse -->
@@ -291,7 +292,39 @@
         var name=$(this).text();
         $('#myModal h6').text(name);
     });
-
+	$(document).ready(function(){
+		$('#search').keyup(function(){
+			var results = "";
+            var searchField = $('#search').val();
+			if(searchField != "")
+			{
+				var regex = new RegExp(searchField, "i");
+            $.getJSON('files/data.json', function(data) {
+				
+				var x = data["users"];
+				
+				
+				for(var i = 0; i < x.length;i++)
+				{
+				
+                if (x[i].search(regex) != -1) {
+                  results += x[i] + "<br />";
+				  
+                  }
+                  
+                }
+				$('#results').html(results);
+              });
+              
+			}
+			else
+			{
+			$('#results').html(results);
+			}
+            
+              
+            }); 
+        });
     
 </script>
 </body>
