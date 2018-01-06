@@ -10,13 +10,23 @@ if(isset($_REQUEST['id']))
 	{
 		if($row["sender_id"] == $sender_id)
 		{
-			echo '<p id = "sender" style = "float:right"> '.$row["message"].' </p>';
+			echo '<div class="row">
+                                            <div class="col-md-4" id="sender">
+                                            <p >'.$row["message"].'<span class="glyphicon glyphicon-chevron-left glyphicon-align-right"></span></p>
+                                            </div>
+                                            <div class="divider"></div>
+                                        </div>';
 		}
 		if($row["sender_id"] == $receiver_id)
 		{
-			echo '<p id = "reciever" style = "float:left"> '.$row["message"].' </p>';
+			echo '<div class="row">
+                                                <div class="col-md-5" id="recipient">
+                                                    <p ><span class="glyphicon glyphicon-chevron-right glyphicon-align-left"></span>&nbsp;'.$row["message"].' </p>
+                                                </div>
+                                                <div class="divider"></div>
+                                            </div>';
 		}
-		echo '<div style = "clear:both"></div>';
+		
 
 	}
 }

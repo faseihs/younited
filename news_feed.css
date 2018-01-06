@@ -1,9 +1,11 @@
 
 #sender{
-    float: right !important;
+    
+    padding-top: 2px;
 }
 #sender span{
     float: right !important;
+	
 }
 #recipient{
     float: left !important;
