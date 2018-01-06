@@ -45,7 +45,6 @@ if(isset($_POST['update'])){
 
     if(isset($_FILES['profile_pic']))
 	{
-        js_alert("Im here");
 		$profile = $_FILES["profile_pic"];
 		$profile_name = $profile['name'];
 		$profile_location = $profile['tmp_name'];
@@ -123,9 +122,24 @@ if(isset($_POST['update'])){
 		{
 			$message = "pls upload jpg file or  png file for your cover picture.";
 		}*/
-	}
-
-
+    }
+    
+    $files_path="files/";
+    if (!is_dir('files/'.$id)) {
+        mkdir('files/'.$id, 0777, true);
+    }
+    $file_path=$files_path.$id.'/data.json';
+    $json_data=new stdClass();
+    $json_data->user_info=new stdClass();
+    $json_data->user_info->name=$new_name;
+    $json_data->user_info->occupation="Student";
+    $json_data->user_info->address=$new_address;
+    $json_data->user_info->city=$new_city;
+    $json_data->user_info->age=$new_age;
+    $json_data->user_info->birthday=$new_dob;
+    $json_data->user_info->institute=$new_institute;
+    $final_json=json_encode($json_data);
+    file_put_contents($file_path,$final_json);
 }
 
 
@@ -273,7 +287,7 @@ $e_institute=$results1[0]['Institute'];
                 <div class="row owner">
                     <div class="col-md-2 col-md-offset-5 col-sm-4 col-sm-offset-4 col-xs-6 col-xs-offset-3 text-center">
                         <div class="avatar">
-                            <img src="<?php echo $dp ?>" alt="Circle Image" class="dp img-circle img-no-padding img-responsive">
+                            <img src="<?php echo $dp ?>" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                         </div>
                     </div>
                 </div>     
