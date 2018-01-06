@@ -195,7 +195,7 @@ $e_cover=$results1[0]['cover_pic'];
 	<link rel="icon" type="image/png" href="favicon.ico">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	
-	<title>Younited | Edit Profile</title>
+	<title><?php echo ucwords($e_name);  ?> | Edit Profile</title>
 
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -204,7 +204,8 @@ $e_cover=$results1[0]['cover_pic'];
     <link href="assets/css/ct-paper.css" rel="stylesheet"/>
     <link href="assets/css/demo.css" rel="stylesheet" /> 
     <link href="assets/css/examples.css" rel="stylesheet" /> 
-    <link href="edit_profile.css" rel="stylesheet" /> 
+    <link href="add_post.css" rel="stylesheet" /> 
+    <link href="parallax.css" rel="stylesheet" /> 
     
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -281,7 +282,7 @@ $e_cover=$results1[0]['cover_pic'];
         <div class="collapse navbar-collapse" id="navigation-example-2">
           <ul class="nav navbar-nav navbar-right">
             <li>
-                <a href="#" class="btn btn-simple">NewsFeed</a>
+                <a href="news_feed.php" class="btn btn-simple">NewsFeed</a>
             </li>
             <li>
                 <a href="login-form.php?logoutid=1" class="btn btn-simple">Logout</a>
@@ -298,7 +299,7 @@ $e_cover=$results1[0]['cover_pic'];
     </nav> 
 
     <div class="wrapper">
-        <div class="profile-background" style="background-image:url(<?php if(empty($e_cover)) echo 'bg1.jpg'; else echo $e_cover;  ?>);"> 
+        <div class="profile-background parallax" style="background-image:url(<?php if(empty($e_cover)) echo 'bg1.jpg'; else echo $e_cover;  ?>);"> 
         </div>
         <div class="profile-content section-nude">
             <div class="container">
