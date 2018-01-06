@@ -29,6 +29,7 @@
       session_start();
       $_SESSION['id'] = $row['id'];
       $_SESSION['name'] = $row['name'];
+      $_SESSION['email']=$row['email'];
       header("Location:profile.php");
     }
     else

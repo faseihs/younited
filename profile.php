@@ -90,7 +90,7 @@
                     <div class="col-md-6 col-md-offset-3 text-center">
                         <p>An artist of considerable range, Chet Faker — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music, giving it a warm, intimate feel with a solid groove structure. </p>
                         <br />
-                        <btn class="btn"><i class="fa fa-cog"></i> Edit Profile</btn>
+                        <btn onclick="window.location.href='edit_profile.php'" class="btn"><i class="fa fa-cog"></i> Edit Profile</btn>
                     </div>
                 </div>
                 <div class="profile-tabs">

@@ -40,6 +40,7 @@
 }
 					
 					$profile_destination = 'profile_pics/'.$id.'/'.$profile_name;
+					if(file_exists($profile_destination)) unlink($profile_destination);
 				if(move_uploaded_file($profile_location,$profile_destination))
 				{
 

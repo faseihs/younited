@@ -1,14 +1,20 @@
 <?php
 session_start();
-if(!isset($_SESSION['email'])){
-    header('Location :login-form.html');
+require_once("mylibrary.php");
+if(isset($_SESSION['id']))
+{
+    
+}
+else {
+    header('Location: login.php');
 }
 require_once("pdo_database.php");
+
 $email=$_SESSION['email'];
-$id=$_SESSION['uid'];
+$id=$_SESSION['id'];
 if(isset($_POST['update'])){
     $new_name=$_POST['name'];
-    $new_dob=$_POST['bday'];
+    $new_dob=$_POST['dob'];
     $new_email=$_POST['email'];
     $new_city=$_POST['city'];
     $new_institute=$_POST['institute'];
@@ -26,12 +32,99 @@ if(isset($_POST['update'])){
 
     //Inserting into Profile Code
 
-    $ins=$dbCon->prepare("UPDATE profile SET City =:city , Age=:age , Address=:address , Institute=:inst WHERE id=:id");
+    $ins=$dbCon->prepare("UPDATE profile SET City =:city , Age=:age , Address=:addres , Institute=:inst WHERE id=:id");
     $ins->bindParam(':city',$new_city);
 	$ins->bindParam(':age',$new_age);
-    $ins->bindParam(':address',$new_address);
-    $ins->bindParam(':inst',$new_institute;
+    $ins->bindParam(':addres',$new_address);
+    $ins->bindParam(':inst',$new_institute);
+    $ins->bindParam(':id',$id);
     $ins->execute();
+
+
+    //Updating Profile Pic
+
+    if(isset($_FILES['profile_pic']))
+	{
+        js_alert("Im here");
+		$profile = $_FILES["profile_pic"];
+		$profile_name = $profile['name'];
+		$profile_location = $profile['tmp_name'];
+		$profile_size = $profile['size'];
+		$profile_error = $profile['error'];
+		
+		$profile_ext = explode(".",$profile_name);
+		$profile_ext = strtolower(end($profile_ext));
+		if($profile_ext === "jpg" || $profile_ext === "png")
+		{
+			if($profile_error === 0)
+			{
+					$des = "profile_pics/".$id;
+					if (!file_exists($des)) {
+    				mkdir($des);
+}
+					
+                    $profile_destination = 'profile_pics/'.$id.'/'.'profile.'.$profile_ext;
+                    if (!is_dir('profile/'.$id)) {
+                        mkdir('profile/'.$id, 0777, true);
+                    }
+                    if(file_exists($profile_destination)) unlink($profile_destination);
+				if(move_uploaded_file($profile_location,$profile_destination))
+				{
+                    $ins=$dbCon->prepare("UPDATE profile SET profile_pic =:dp WHERE id=:id");
+					$ins->bindParam(':dp',$profile_destination);
+	                $ins->bindParam(':id',$id);
+                    $ins->execute();
+				}
+				else
+				{
+					js_alert("Cannot set profile picture"); 
+				}
+			}
+			else
+			{
+				$message = "Error in uploading the profile picture.";
+			}
+		}
+		else
+		{
+			$message = "pls upload jpg file or  png file for your profile picture.";
+		}
+		
+		
+		/*if($cover_ext === "jpg" || $cover_ext === "png")
+		{
+			if($cover_error === 0)
+			{
+				if($cover_size < 5000000)
+				{
+				mkdir("cover_pics/".$id);
+				$cover_destination = 'cover_pics/'.$id.'/'.$cover_name;
+				if(move_uploaded_file($cover_location,$cover_destination))
+				{
+					$query = mysqli_query($con,"INSERT INTO profile(id,profile_pic,cover_pic)VALUES('$id','$profile_name','$cover_name')") or die("could not insert into database");	
+					$message = "Cover picture uploaded";		
+				}
+				else
+				{
+					$message = "HAHAHA loray lag gye";
+				}
+				}
+				else
+				{
+					$message = "Cover picture is too large";
+				}
+			}
+			else
+			{
+				$message = "Error in uploading the cover picture.";
+			}
+		}
+		else
+		{
+			$message = "pls upload jpg file or  png file for your cover picture.";
+		}*/
+	}
+
 
 }
 
@@ -40,8 +133,8 @@ if(isset($_POST['update'])){
 	
 $stmt = $dbCon->prepare("SELECT * FROM users WHERE email = :email");
 $stmt->bindParam(':email',$email);
+$stmt->execute();
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 $e_id=$results[0]['id'];
 $e_name=$results[0]['name'];
 $e_email=$results[0]['email'];
@@ -49,8 +142,9 @@ $e_dob=$results[0]['dob'];
 
 $stmt1 = $dbCon->prepare("SELECT * FROM profile WHERE id = :id");
 $stmt1->bindParam(':id',$e_id);
-$results1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+$stmt1->execute();
+$results1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+$dp=$results1[0]['profile_pic'];
 $e_city=$results1[0]['City'];
 $e_age=$results1[0]['Age'];
 $e_address=$results1[0]['Address'];
@@ -99,29 +193,29 @@ $e_institute=$results1[0]['Institute'];
     <script src="assets/js/ct-paper.js"></script>
 </head>
 <body>
-       <div class="progress-div col-md-6">
-            <div class="progress">
-                    <div id="bar" class="progress-bar-striped">
+       <div class="progress-div col-md-6" id="pre-progress">
+            <div class="progress" id="progress">
+                    <div id="pre-bar" class="progress-bar-striped">
                             1%
                     </div>
                   </div>
            </div> 
     <style>
-        .progress-div{
+        #pre-progress{
             height: 100vh;
             width: 100%;
             margin: auto;
             text-align: center;
         }
 
-        .progress{
+        #progress{
             height: 50px;
             position:relative;
             top:50%;
             width:100%;
             background-color: #ddd;
         }
-        #bar{
+        #pre-bar{
             width: 1%;
             color:white;
             background-color: #2c475c;
@@ -156,7 +250,7 @@ $e_institute=$results1[0]['Institute'];
                 <a href="#" class="btn btn-simple">NewsFeed</a>
             </li>
             <li>
-                <a href="#" class="btn btn-simple">Messages</a>
+                <a href="login.php?id=69" class="btn btn-simple">Logout</a>
             </li>
             <li>
                 <a href="#" target="_blank" class="btn btn-simple"><i class="fa fa-twitter"></i></a>
@@ -177,13 +271,13 @@ $e_institute=$results1[0]['Institute'];
                 <div class="row owner">
                     <div class="col-md-2 col-md-offset-5 col-sm-4 col-sm-offset-4 col-xs-6 col-xs-offset-3 text-center">
                         <div class="avatar">
-                            <img src="assets/paper_img/flume.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                            <img src="<?php echo $dp ?>" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                         </div>
                     </div>
                 </div>     
                 <div class="row">
                         <div class="col-md-8 col-md-offset-2">
-                            <form action="edit_profile.php" method="post" class="contact-form">
+                            <form action="edit_profile.php" method="post" class="contact-form" id="edit-form"  enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Name</label>
@@ -224,18 +318,18 @@ $e_institute=$results1[0]['Institute'];
                                     </div>
                                     <div class="col-md-6">
                                         <label>Profile Photo</label>
-                                        <input name="profile_pic" type="file" accept="image/*"  class="form-control" placeholder="New Profile Photo">
+                                        <input name="profile_pic" id="profile_pic" type="file" accept="image/*"  class="form-control" placeholder="New Profile Photo">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 col-md-offset-4">
-                                        <button type="submit" id="update" class="btn btn-danger btn-block btn-lg btn-fill">Update</button>
+                                        <button type="submit" name="update" id="update" class="btn btn-danger btn-block btn-lg btn-fill">Update</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
-            </div>
+            </div> 
         </div>
     </div>
     <footer class="footer-demo section-nude">
@@ -254,15 +348,15 @@ $e_institute=$results1[0]['Institute'];
         </div>
     </footer>
     <script>
-        $(".progress-div").nextAll().hide();
+        $("#pre-progress").nextAll().hide();
         function move() {
-            var elem = document.getElementById("bar"); 
+            var elem = document.getElementById("pre-bar"); 
             var width = 1;
             var id = setInterval(frame, 10);
             function frame() {
                 if (width >= 100) {
                     clearInterval(id);
-                    $(".progress-div").fadeOut("slow",function(){$(".progress-div").nextAll().fadeIn();});
+                    $("#pre-progress").fadeOut("slow",function(){$("#pre-progress").nextAll().fadeIn();});
 
                 } else {
                     width++; 
