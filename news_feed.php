@@ -387,7 +387,7 @@ function checkSubmit(e,x) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("test").innerHTML = this.responseText;
+      //document.getElementById("test").innerHTML = this.responseText;
       }
       };
       xhttp.open("GET", "message.php?msg=" + message+"&id=" + id, true);
