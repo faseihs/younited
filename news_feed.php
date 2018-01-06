@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['id']))
+{
+  header("location:login-form.php");
+}
+else
+{
+  
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -95,7 +107,7 @@
                                     </ul>
                             </li>
                         <li>
-                          <a href="#" target="_blank" class="btn btn-fill">Logout&nbsp;<span class="glyphicon glyphicon-log-out glyphicon-align-left" aria-hidden="true"></span></a>
+                          <a href="login-form.php?logoutid=1" target="_blank" class="btn btn-fill">Logout&nbsp;<span class="glyphicon glyphicon-log-out glyphicon-align-left" aria-hidden="true"></span></a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

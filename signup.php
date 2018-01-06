@@ -1,3 +1,39 @@
+<?php
+include_once('database.php');
+$message = "";
+if(isset($_POST['submit']))
+{
+  $name = $_POST['name'];
+  $email = $_POST['email'];
+  $dob = $_POST['dob'];
+  $dob = date('Y-m-d',strtotime($dob));
+
+  $password = $_POST['password'];
+  
+    $query = mysqli_query($con,"SELECT * FROM users WHERE email = '$email'");
+    if(mysqli_num_rows($query) > 0)
+    {
+      $message = "Email Already Exists.";
+    }
+    else
+    {
+   
+    $password = sha1($password);
+    $query = mysqli_query($con,"INSERT into users(name,email,dob,password) values('$name','$email','$dob','$password')") or die("could not insert data into database");
+    
+    $query = mysqli_query($con,"SELECT id FROM users WHERE email = '$email'") or die("could not find id from database");
+    $row = mysqli_fetch_assoc($query);
+    $id = $row['id'];
+
+    $query = mysqli_query($con,"INSERT INTO profile (id) VALUES('$id')") or die("could not insert id in profile");
+    $message = "Registration Complete. Please sign in to continue.";
+
+    } 
+  
+  
+}
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -167,37 +203,47 @@
                         <div class="col-md-10 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1 ">
                             <div class="register-card">
                                 <h3 class="title">Signup</h3>
-                                <form class="contact-form">
+                                <form class="contact-form" method = "post" action = "signup.php">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="btn-tooltip" data-toggle="tooltip" data-placement="top" title="Your Full Name">Name</label>
-                                                <input class="form-control" type="text" placeholder="Name" id = "sname" required>
+                                                <input class="form-control" type="text" name = "name" placeholder="Name" id = "sname" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="btn-tooltip" data-toggle="tooltip" data-placement="right" title="Select Date Of Birth">Date Of Birth</label>
-                                                <input class="datepicker form-control" type="text" placeholder="Your DOB" id = "sbirthday" required>
+                                                <input class="datepicker form-control" type="text" name = "dob" placeholder="Your DOB" id = "sbirthday" required>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label class="btn-tooltip" data-toggle="tooltip" data-placement="left" title="Your Email">Email</label>
-                                                <input class="form-control" type="email" placeholder="Email" id = "semail"required>
+                                                <input class="form-control" type="email" placeholder="Email" name = "email" id = "semail"required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="btn-tooltip" data-toggle="tooltip" data-placement="right" title="Upper Case , Lower Case and Number/Special Characters">Password</label>
-                                                <input class="form-control" type="password" placeholder="Password" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$
-                                                " required>
+                                                <input class="form-control" type="password" placeholder="Password"  name = "password" required>
                                                 </div>
                                         </div>
                                         <div class="row">
-                                            <button type="submit" class="btn btn-info btn-fill btn-block">Signup</button>
+                                            <button type="submit" class="btn btn-info btn-fill btn-block" name = "submit" >Signup</button>
                                         </div>
+                                        <div class="row">
+                                            <button class="btn btn-info btn-fill btn-block" id = "loginfb" onclick = "login()">Signup with facebook</button>
+                                        </div>
+
+                                        <div class="row">
+                                          <?php
+                                          if($message != "")
+                                            echo "<p class = 'alert alert-info' style = 'text-align:center; margin-top:15px;'>$message</p>";
+                                          ?>
+                                        </div>
+
 										
 										<div class="row">
                                            
                                         </div>
                                     </form>
-                                    <button class="btn btn-info btn-fill btn-block" id = "loginfb" onclick = "login()">Signup with facebook</button>
+                                    
                                 
                             </div>
                         </div>

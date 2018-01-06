@@ -1,3 +1,50 @@
+<?php
+    session_start();
+    $message = "";
+    include_once('database.php');
+    if(isset($_GET["logoutid"]))
+    {
+      $uid = $_GET["logoutid"];
+      $query2 = mysqli_query($con,"UPDATE users set active = '0' WHERE id = '$uid'") or die("na baba na");
+      $message = "You have successfully logout.";
+      $_SESSION = array();
+      session_destroy();
+      $message = "you have been logged out.";
+    }
+
+    if(isset($_SESSION['id']))
+    {
+        header("location:news_feed.php");
+    }
+  
+  
+  
+  
+    
+
+    if(isset($_POST['email'] ) && isset($_POST['password']))
+    {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+    $password = sha1($password);
+
+    $query = mysqli_query($con,"SELECT * FROM users WHERE password = '$password' && email = '$email'");
+    if(mysqli_num_rows($query) === 1)
+    {
+      $row = mysqli_fetch_assoc($query);
+      session_start();
+      $_SESSION['id'] = $row['id'];
+      $_SESSION['name'] = $row['name'];
+      header("Location:news_feed.php");
+    }
+    else
+    {
+      $message = "Email or Password doesn't exist.";
+    }
+    }
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -99,7 +146,7 @@
                         <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1 ">
                             <div class="register-card">
                                 <h3 class="title">Login</h3>
-                                <form class="register-form">
+                                <form class="register-form" method = "post" action = "login-form.php">
                                     <label>Email</label>
                                     <input type="text" class="form-control" placeholder="Email" name="email" required>
 
@@ -107,6 +154,11 @@
                                     <input type="password" class="form-control" placeholder="Password" name="password" required>
                                     <button class="btn btn-info btn-fill btn-block">Login</button>
                                     <button style="color:white;" type="button" class="btn btn-danger btn-block btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="Click here to Reset Your Password">Forgot Password</button>
+
+                                    <?php
+                                          if($message != "")
+                                            echo "<p class = 'alert alert-info' style = 'text-align:center; margin-top:15px;'>$message</p>";
+                                    ?>
                                 </form>
                             </div>
                         </div>
