@@ -65,7 +65,7 @@ if(isset($_POST['update'])){
     				mkdir($des);
 }
 					
-                    $profile_destination = 'profile_pics/'.$id.'/'.'profile.'.$profile_ext;
+                    $profile_destination = 'profile_pics/'.$id.'/'.$profile_name;
                     if (!is_dir('profile/'.$id)) {
                         mkdir('profile/'.$id, 0777, true);
                     }
@@ -115,7 +115,7 @@ if(isset($_POST['update'])){
     				mkdir($des);
 }
 					
-                    $cover_destination = 'profile_pics/'.$id.'/'.'cover.'.$profile_ext;
+                    $cover_destination = 'profile_pics/'.$id.'/'.$cover_name;
                     if (!is_dir('profile/'.$id)) {
                         mkdir('profile/'.$id, 0777, true);
                     }
