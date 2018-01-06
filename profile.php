@@ -1,3 +1,16 @@
+<?php
+session_start();
+if(isset($_SESSION['id']) && isset($_SESSION['name']))
+{
+  $id = $_SESSION['id'];
+  $name = $_SESSION['name'];
+}
+else
+{
+  header("location:login-form.php");
+}
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,7 +18,7 @@
 	<link rel="icon" type="image/png" href="favicon.ico">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	
-	<title>YouNited | Profile</title>
+	<title>YouNited | <?php echo ucwords($name); ?></title>
 
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -54,10 +67,10 @@
         <div class="collapse navbar-collapse" id="navigation-example-2">
           <ul class="nav navbar-nav navbar-right">
             <li>
-                <a href="#" class="btn btn-simple">NewsFeed</a>
+                <a href="newsfeed.php" class="btn btn-simple">NewsFeed</a>
             </li>
             <li>
-                <a href="#" class="btn btn-simple">Messages</a>
+                <a href="login-form.php?logoutid=1" class="btn btn-simple">Logout</a>
             </li>
             <li>
                 <a href="#" target="_blank" class="btn btn-simple"><i class="fa fa-twitter"></i></a>
@@ -82,7 +95,7 @@
                             <img src="faseih1.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                         </div>
                         <div class="name">
-                            <h4>Faseih Saad<br /><small>Student</small></h4>
+                            <h4><?php echo ucwords($name); ?><br /><small>Student</small></h4>
                         </div>
                     </div>
                 </div>
@@ -266,8 +279,8 @@
 	  
 	  $(document).ready(function(){
 	  
-		$.getJSON("files/data.json", function(result){
-			var x = result["users_info"][0];
+		$.getJSON("files/"+"<?php echo $id ?>"+"/data.json",function(result){
+			var x = result.user_info;
 			
 			$('#pname').text(x["name"]);
 			$('#poccupation').text(x["occupation"]);

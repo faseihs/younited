@@ -80,7 +80,7 @@ else
                   <div class="collapse navbar-collapse" id="navigation-example-2">
                     <ul class="nav navbar-nav">
                             <li class="dropdown">
-                                    <button id="acha" href="#" type="button" style="color:white;" class="dropdown-toggle btn btn-info" data-toggle="dropdown">Faseih Saad<span class="caret"></span></button>
+                                    <button id="acha" href="#" type="button" style="color:white;" class="dropdown-toggle btn btn-info" data-toggle="dropdown"><?php echo ucwords($_SESSION['name'])?><span class="caret"></span></button>
 <!--                                  You can add classes for different colours on the next element -->
 <script>
     
