@@ -97,8 +97,8 @@ else
                                       <li class="dropdown-submenu">
                                           <a class="test" href="#">Profile &nbsp;<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
                                           <ul class="dropdown-menu dropdown-primary dropdown-menu-right">
-                                              <li><a tab-index="-1" href="#">View</a></li>
-                                              <li><a tab-index="-1" href="#">Edit</a></li>
+                                              <li><a href="profile.php" tab-index="-1" href="#">View</a></li>
+                                              <li><a href="edit_profile.php" tab-index="-1" href="#">Edit</a></li>
                                           </ul>
                                         </li>
                                       <li><a href="#">Search For Friends</a></li>

@@ -20,6 +20,7 @@ if(isset($_POST['update'])){
     $new_institute=$_POST['institute'];
     $new_age=$_POST['age'];
     $new_address=$_POST['address'];
+    $new_occupation=$_POST['occupation'];
 
     //Inserting into Users Code
     
@@ -32,11 +33,12 @@ if(isset($_POST['update'])){
 
     //Inserting into Profile Code
 
-    $ins=$dbCon->prepare("UPDATE profile SET City =:city , Age=:age , Address=:addres , Institute=:inst WHERE id=:id");
+    $ins=$dbCon->prepare("UPDATE profile SET City =:city , Age=:age , Address=:addres , Institute=:inst , Occupation=:occ WHERE id=:id");
     $ins->bindParam(':city',$new_city);
 	$ins->bindParam(':age',$new_age);
     $ins->bindParam(':addres',$new_address);
     $ins->bindParam(':inst',$new_institute);
+    $ins->bindParam(':occ',$new_occupation);
     $ins->bindParam(':id',$id);
     $ins->execute();
 
@@ -88,42 +90,58 @@ if(isset($_POST['update'])){
 		{
 			$message = "pls upload jpg file or  png file for your profile picture.";
 		}
+    }
+    //Updating COver Pic
+
+
+    if(isset($_FILES['cover_pic']))
+	{
+		$cover = $_FILES["cover_pic"];
+		$cover_name = $cover['name'];
+		$cover_location = $cover['tmp_name'];
+		$cover_size = $cover['size'];
+		$cover_error = $cover['error'];
 		
-		
-		/*if($cover_ext === "jpg" || $cover_ext === "png")
+		$cover_ext = explode(".",$cover_name);
+		$cover_ext = strtolower(end($cover_ext));
+		if($cover_ext === "jpg" || $cover_ext === "png")
 		{
 			if($cover_error === 0)
 			{
-				if($cover_size < 5000000)
-				{
-				mkdir("cover_pics/".$id);
-				$cover_destination = 'cover_pics/'.$id.'/'.$cover_name;
+					$des = "profile_pics/".$id;
+					if (!file_exists($des)) {
+    				mkdir($des);
+}
+					
+                    $cover_destination = 'profile_pics/'.$id.'/'.'cover.'.$profile_ext;
+                    if (!is_dir('profile/'.$id)) {
+                        mkdir('profile/'.$id, 0777, true);
+                    }
+                    if(file_exists($cover_destination)) unlink($cover_destination);
 				if(move_uploaded_file($cover_location,$cover_destination))
 				{
-					$query = mysqli_query($con,"INSERT INTO profile(id,profile_pic,cover_pic)VALUES('$id','$profile_name','$cover_name')") or die("could not insert into database");	
-					$message = "Cover picture uploaded";		
+                    $ins=$dbCon->prepare("UPDATE profile SET cover_pic =:dp WHERE id=:id");
+					$ins->bindParam(':dp',$cover_destination);
+	                $ins->bindParam(':id',$id);
+                    $ins->execute();
 				}
 				else
 				{
-					$message = "HAHAHA loray lag gye";
-				}
-				}
-				else
-				{
-					$message = "Cover picture is too large";
+					js_alert("Cannot set profile picture"); 
 				}
 			}
 			else
 			{
-				$message = "Error in uploading the cover picture.";
+				$message = "Error in uploading the profile picture.";
 			}
 		}
 		else
 		{
-			$message = "pls upload jpg file or  png file for your cover picture.";
-		}*/
+			$message = "pls upload jpg file or  png file for your profile picture.";
+		}
     }
-    
+
+    //Creating JSON
     $files_path="files/";
     if (!is_dir('files/'.$id)) {
         mkdir('files/'.$id, 0777, true);
@@ -132,7 +150,7 @@ if(isset($_POST['update'])){
     $json_data=new stdClass();
     $json_data->user_info=new stdClass();
     $json_data->user_info->name=$new_name;
-    $json_data->user_info->occupation="Student";
+    $json_data->user_info->occupation=$new_occupation;
     $json_data->user_info->address=$new_address;
     $json_data->user_info->city=$new_city;
     $json_data->user_info->age=$new_age;
@@ -163,8 +181,8 @@ $e_city=$results1[0]['City'];
 $e_age=$results1[0]['Age'];
 $e_address=$results1[0]['Address'];
 $e_institute=$results1[0]['Institute'];
-
-
+$e_occupation=$results1[0]['Occupation'];
+$e_cover=$results1[0]['cover_pic'];
 //End Calling Data Part
 
 
@@ -266,7 +284,7 @@ $e_institute=$results1[0]['Institute'];
                 <a href="#" class="btn btn-simple">NewsFeed</a>
             </li>
             <li>
-                <a href="login.php?id=69" class="btn btn-simple">Logout</a>
+                <a href="login-form.php?logoutid=1" class="btn btn-simple">Logout</a>
             </li>
             <li>
                 <a href="#" target="_blank" class="btn btn-simple"><i class="fa fa-twitter"></i></a>
@@ -280,7 +298,7 @@ $e_institute=$results1[0]['Institute'];
     </nav> 
 
     <div class="wrapper">
-        <div class="profile-background" style="background-image:url(bg1.jpg);"> 
+        <div class="profile-background" style="background-image:url(<?php if(empty($e_cover)) echo 'bg1.jpg'; else echo $e_cover;  ?>);"> 
         </div>
         <div class="profile-content section-nude">
             <div class="container">
@@ -337,12 +355,16 @@ $e_institute=$results1[0]['Institute'];
                                         <input onchange="uploadFile()" name="profile_pic" id="profile_pic" type="file" accept="image/*"  class="form-control" placeholder="New Profile Photo">
                                     </div>
                                 </div>
-                                <div class="progress" style="display:none">
-				                    <div class="progress-bar" role="progressbar" aria-valuenow="0"
-				                        aria-valuemin="0" aria-valuemax="100" style="width:0%">
-				                         0%
-				                    </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Occupation</label>
+                                        <input name="occupation" required type="text" class="form-control" value="<?php echo $e_occupation ?>">
                                     </div>
+                                    <div class="col-md-6">
+                                        <label>Cover Photo</label>
+                                        <input  name="cover_pic" id="cover_pic" type="file" accept="image/*"  class="form-control" placeholder="New Cover Pic Photo">
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-4 col-md-offset-4">
                                         <button  type="submit" name="update" id="update" class="btn btn-danger btn-block btn-lg btn-fill">Update</button>
