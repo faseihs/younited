@@ -109,6 +109,9 @@ else
                                       <li><a href="#">Change Password</a></li>
                                     </ul>
                             </li>
+                            <li>
+                          <a href="add_post.php" target="_blank" style="color:white;" class="btn btn-info">Add Post</a>
+                        </li>
                         <li>
                           <a href="login-form.php?logoutid=1" target="_blank" class="btn btn-fill">Logout&nbsp;<span class="glyphicon glyphicon-log-out glyphicon-align-left" aria-hidden="true"></span></a>
                         </li>
