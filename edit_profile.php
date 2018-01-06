@@ -1,12 +1,13 @@
 <?php
 session_start();
+header("Cache-Control: no-cache, must-revalidate");
 require_once("mylibrary.php");
 if(isset($_SESSION['id']))
 {
     
 }
 else {
-    header('Location: login.php');
+    header('Location: index.html');
 }
 require_once("pdo_database.php");
 
@@ -68,7 +69,8 @@ if(isset($_POST['update'])){
                     if (!is_dir('profile/'.$id)) {
                         mkdir('profile/'.$id, 0777, true);
                     }
-                    if(file_exists($profile_destination)) unlink($profile_destination);
+                    if(file_exists($profile_destination)) {unlink($profile_destination);
+                        clearstatcache();}
 				if(move_uploaded_file($profile_location,$profile_destination))
 				{
                     $ins=$dbCon->prepare("UPDATE profile SET profile_pic =:dp WHERE id=:id");
@@ -117,7 +119,8 @@ if(isset($_POST['update'])){
                     if (!is_dir('profile/'.$id)) {
                         mkdir('profile/'.$id, 0777, true);
                     }
-                    if(file_exists($cover_destination)) unlink($cover_destination);
+                    if(file_exists($cover_destination)){ unlink($cover_destination);
+                        clearstatcache();}
 				if(move_uploaded_file($cover_location,$cover_destination))
 				{
                     $ins=$dbCon->prepare("UPDATE profile SET cover_pic =:dp WHERE id=:id");
@@ -162,11 +165,12 @@ if(isset($_POST['update'])){
 
 
 //Calling for Data
-	
-$stmt = $dbCon->prepare("SELECT * FROM users WHERE email = :email");
-$stmt->bindParam(':email',$email);
-$stmt->execute();
+clearstatcache();
+$stmt = $dbCon->prepare("SELECT * FROM users WHERE id = :id");
+$stmt->bindParam(':id',$id);
+$stmt->execute() or die("Cannot Fetch from Users table");
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $e_id=$results[0]['id'];
 $e_name=$results[0]['name'];
 $e_email=$results[0]['email'];
@@ -174,8 +178,9 @@ $e_dob=$results[0]['dob'];
 
 $stmt1 = $dbCon->prepare("SELECT * FROM profile WHERE id = :id");
 $stmt1->bindParam(':id',$e_id);
-$stmt1->execute();
+$stmt1->execute() or die("Cannot fetch from Profile Table");
 $results1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
 $dp=$results1[0]['profile_pic'];
 $e_city=$results1[0]['City'];
 $e_age=$results1[0]['Age'];
