@@ -193,6 +193,7 @@ $e_institute=$results1[0]['Institute'];
     <script src="assets/js/ct-paper.js"></script>
 </head>
 <body>
+
        <div class="progress-div col-md-6" id="pre-progress">
             <div class="progress" id="progress">
                     <div id="pre-bar" class="progress-bar-striped">
@@ -200,6 +201,7 @@ $e_institute=$results1[0]['Institute'];
                     </div>
                   </div>
            </div> 
+           
     <style>
         #pre-progress{
             height: 100vh;
@@ -271,7 +273,7 @@ $e_institute=$results1[0]['Institute'];
                 <div class="row owner">
                     <div class="col-md-2 col-md-offset-5 col-sm-4 col-sm-offset-4 col-xs-6 col-xs-offset-3 text-center">
                         <div class="avatar">
-                            <img src="<?php echo $dp ?>" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                            <img src="<?php echo $dp ?>" alt="Circle Image" class="dp img-circle img-no-padding img-responsive">
                         </div>
                     </div>
                 </div>     
@@ -318,12 +320,18 @@ $e_institute=$results1[0]['Institute'];
                                     </div>
                                     <div class="col-md-6">
                                         <label>Profile Photo</label>
-                                        <input name="profile_pic" id="profile_pic" type="file" accept="image/*"  class="form-control" placeholder="New Profile Photo">
+                                        <input onchange="uploadFile()" name="profile_pic" id="profile_pic" type="file" accept="image/*"  class="form-control" placeholder="New Profile Photo">
                                     </div>
                                 </div>
+                                <div class="progress" style="display:none">
+				                    <div class="progress-bar" role="progressbar" aria-valuenow="0"
+				                        aria-valuemin="0" aria-valuemax="100" style="width:0%">
+				                         0%
+				                    </div>
+                                    </div>
                                 <div class="row">
                                     <div class="col-md-4 col-md-offset-4">
-                                        <button type="submit" name="update" id="update" class="btn btn-danger btn-block btn-lg btn-fill">Update</button>
+                                        <button  type="submit" name="update" id="update" class="btn btn-danger btn-block btn-lg btn-fill">Update</button>
                                     </div>
                                 </div>
                             </form>
@@ -366,6 +374,10 @@ $e_institute=$results1[0]['Institute'];
             }
         }
 move();
+
+
+//Progress Bar
+
     </script>
     </body>
     </html> 

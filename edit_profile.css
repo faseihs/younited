@@ -5,3 +5,7 @@
     background-color: #f4f3ef
 }
 
+.dp{
+    min-width:300px !important;
+    min-height: 300px !important;
+}
