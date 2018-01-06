@@ -133,6 +133,7 @@ else
                                             <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                                                 <li class="active"><a id="newsfeed" href="#follows" data-toggle="tab">News Feed</a></li>
                                                 <li><a href="#following" data-toggle="tab">Friends</a></li>
+                                                <li><a href="#notifications" data-toggle="tab">Notifications</a></li>
                 <!--                                 <li><a href="#following" data-toggle="tab">Following</a></li> -->
                                             </ul>
                                         </div>
@@ -277,6 +278,13 @@ else
                                                             
                                                         </div>
                                                     </div>
+                                        </div>
+                                        <div class="tab-pane text-center" id="notifications">
+                                          <div class="row">
+                                            <div class="col-md-5 col-md-offset-3">
+                                              <p><a class="btn btn-simple">Faseih Saad</a>send you a friend request &nbsp;<button class="btn btn-fill btn-info">Accept</button></p>
+                                            </div>
+                                          </div>
                                         </div>
                                     </div>
                                     
