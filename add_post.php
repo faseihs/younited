@@ -1,3 +1,81 @@
+<?php
+include_once("database.php");
+session_start();
+$message = "";
+if(isset($_SESSION['id']) && isset($_SESSION['name']))
+{
+    $id = $_SESSION['id'];
+    $name = $_SESSION['name'];
+    if(isset($_POST["text"]) || isset($_FILES["photo"]))
+    {
+        $text = $_POST["text"];
+        $profile = "";
+        if($_FILES["photo"]["size"] != 0)
+        {
+            print_r($_FILES["photo"]);
+            $profile = $_FILES["photo"];
+            $profile_name = $profile['name'];
+            $profile_location = $profile['tmp_name'];
+            $profile_size = $profile['size'];
+            $profile_error = $profile['error'];
+        
+            $profile_ext = explode(".",$profile_name);
+            $profile_ext = strtolower(end($profile_ext));
+            if($profile_ext === "jpg" || $profile_ext === "png")
+        {
+            if($profile_error === 0)
+            {
+                if($profile_size < 5000000)
+                {
+                    $des = "photos/".$profile_name;
+                
+                if(move_uploaded_file($profile_location,$des))
+                {
+
+                    $query = mysqli_query($con,"INSERT  INTO posts(user_id,post_text,post_img)VALUES('$id','$text','$profile_name')") or die("could not update database");
+                    $message = "Profile picture uploaded successfully";
+                    
+                }
+                else
+                {
+                    $message = "Can't set picture"; 
+                }
+                }
+                else
+                {
+                    $message = " picture is too large";
+                }
+            }
+            else
+            {
+                $message = "Error in uploading the  picture.";
+            }
+        }
+        else
+        {
+            $message = "pls upload jpg file or  png file for your profile picture.";
+        }
+        
+        
+        }
+        else
+        {
+            $query = mysqli_query($con,"INSERT INTO posts(user_id,post_text,post_img)VALUES('$id','$text','')") or die("could not add post");
+            $message = "Post added successfully";
+        }
+
+        
+        
+    }
+}
+else
+{
+    header("Location:login-form.php");
+}
+?>
+
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -95,19 +173,28 @@
                             <div class="row">
                                     <div class="col-md-4 col-md-offset-4">
                                         <label> Post Photo </label>
-                                    <input  name="post_pic" id="post_pic" type="file" accept="image/*"  class="form-control" placeholder="Post Photo">
+                                    <input  name="photo" id="post_pic" type="file"  class="form-control" placeholder="Post Photo">
                                     </div>
                             </div> 
                             <div class="row">
                             <label>Post Text</label>
-                            <textarea name="post_text" class="form-control" rows="4" placeholder="Tell us your thoughts and feelings..."></textarea>
+                            <textarea name="text" class="form-control" rows="4" placeholder="Tell us your thoughts and feelings..."></textarea>
                             </div>
    
                             <div class="row">
                                     <div class="col-md-4 col-md-offset-4">
                                         <button  type="submit" name="add_post" id="add_post" class="btn btn-danger btn-block btn-lg btn-fill">Add Post</button>
                                     </div>
+
+                            
                                 </div>
+
+                                <div class="row">
+                                          <?php
+                                          if($message != "")
+                                            echo "<p class = 'alert alert-info' style = 'text-align:center; margin-top:15px;'>$message</p>";
+                                          ?>
+                                        </div>
                             </form>
                         </div>
                     </div>
