@@ -1,6 +1,29 @@
 <?php
 session_start();
+require_once("pdo_database.php");
+date_default_timezone_set("Asia/Karachi");
 header("Cache-Control: no-cache, must-revalidate");
+$page_name="edit_profile.php";
+    if(isset($_SESSION[$page_name]));
+    else{
+    echo "<script>console.log('OKay')</script>";
+    $stmt = $dbCon->prepare("SELECT * FROM views WHERE page_name = :page_name");
+    $stmt->bindParam(':page_name',$page_name);
+    $stmt->execute() or die("Cannot Fetch from Users table");   
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $views=(int)$results[0]['views'];
+    $views=$views+1;
+    
+    $ins=$dbCon->prepare("UPDATE views SET views =:views  WHERE page_name=:page_name");
+    $ins->bindParam(':views',$views);
+    $ins->bindParam(':page_name',$page_name);
+    $ins->execute();
+    $_SESSION[$page_name]=1;
+    }
+    $message = "";
+    $curr_date=date("h:i:sa");
+    $view_str=$page_name." has been accessed at ".$curr_date;
+    file_put_contents('files/views.txt',$view_str.PHP_EOL, FILE_APPEND);
 require_once("mylibrary.php");
 if(isset($_SESSION['id']))
 {
@@ -9,7 +32,7 @@ if(isset($_SESSION['id']))
 else {
     header('Location: index.html');
 }
-require_once("pdo_database.php");
+
 
 $email=$_SESSION['email'];
 $id=$_SESSION['id'];
