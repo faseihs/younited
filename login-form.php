@@ -1,10 +1,28 @@
 <?php
     session_start();
-    $message = "";
     date_default_timezone_set("Asia/Karachi");
+    include_once("pdo_database.php");
+    $page_name="login-form.php";
+    if(isset($_SESSION[$page_name]));
+    else{
+    echo "<script>console.log('OKay')</script>";
+    $stmt = $dbCon->prepare("SELECT * FROM views WHERE page_name = :page_name");
+    $stmt->bindParam(':page_name',$page_name);
+    $stmt->execute() or die("Cannot Fetch from Users table");   
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $views=(int)$results[0]['views'];
+    $views=$views+1;
+    
+    $ins=$dbCon->prepare("UPDATE views SET views =:views  WHERE page_name=:page_name");
+    $ins->bindParam(':views',$views);
+    $ins->bindParam(':page_name',$page_name);
+    $ins->execute();
+    $_SESSION[$page_name]=1;
+    }
+    $message = "";
     $curr_date=date("h:i:sa");
-    $view_str="login-form.php has been accessed at ".$curr_date."\n";
-    file_put_contents('files/views.txt', $view_str, FILE_APPEND);
+    $view_str="login-form.php has been accessed at ".$curr_date;
+    file_put_contents('files/views.txt',$view_str.PHP_EOL, FILE_APPEND);
     include_once('database.php');
     if(isset($_GET["logoutid"]))
     {
@@ -53,6 +71,14 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111996482-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-112079918-1');
+</script>
 	<meta charset="utf-8" />
 	<link rel="icon" type="image/png" href="favicon.ico">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
