@@ -1,5 +1,8 @@
 <?php
 include_once('database.php');
+$curr_date=date("h:i:sa");
+$view_str="login-form.php has been accessed at ".$curr_date;
+file_put_contents('files/views.txt', $view_str, FILE_APPEND);
 $message = "";
 if(isset($_POST['submit']))
 {
