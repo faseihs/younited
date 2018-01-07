@@ -1,8 +1,9 @@
 <?php
     session_start();
     $message = "";
+    date_default_timezone_set("Asia/Karachi");
     $curr_date=date("h:i:sa");
-    $view_str="login-form.php has been accessed at ".$curr_date;
+    $view_str="login-form.php has been accessed at ".$curr_date."\n";
     file_put_contents('files/views.txt', $view_str, FILE_APPEND);
     include_once('database.php');
     if(isset($_GET["logoutid"]))
