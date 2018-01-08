@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -116,7 +118,7 @@
                             <img src="assets/paper_img/flume.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                         </div>
                         <div class="name">
-                            <h4>Ali Danish<br /><small>Student</small></h4>
+                            <h4 id = "na">Ali Danish</h4><h5 id = "oc">Student</h5>
                         </div>
                     </div>
                 </div>
@@ -165,6 +167,19 @@
                     }
                 }
         move();
+
+        $(document).ready(function(){
+        var url = window.location.href;
+
+        var aho = url.split("=");
+        var id = aho[1];
+        
+        $.getJSON("files/"+id+"/data.json", function(result){
+        $("#na").html(result["user_info"]["name"]);
+        $("#oc").html(result["user_info"]["occupation"]);
+    });
+});
+        
             </script>
 </body>
 

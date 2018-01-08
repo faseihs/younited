@@ -49,8 +49,36 @@ else
 	<script src="assets/js/bootstrap-select.js"></script>
 	<script src="assets/js/bootstrap-datepicker.js"></script>
 	<script src="assets/js/ct-paper.js"></script>    
+
+  <style>
+  #suggested_search
+  {
+    width:300px;
+    height:auto;
+    background-color:#f5f5f5;
+    position:fixed;
+    top:90px;
+    left:1060px;
+    z-index:2;
+    padding:20px;
+    display:none;
+    border-radius:5px;
+  }
+  
+.sp{
+  cursor:pointer;
+  color:grey;
+}
+
+.sp:hover{
+  color:red;
+  
+}
+</style>
 </head>
 <body>
+  <div id = "user" data-id = "<?php echo $id;?>"></div>
+  <div id = "suggested_search"></div>
         <div class="pre-loader">
                 <!-- Loading square for squar.red network -->
                     <span class="loader"><span class="loader-inner"></span></span>
@@ -203,7 +231,73 @@ else
                                                                                         </div>
                                                                                     </div>
                                                                             </div>
+
+                                                                                                                                                    <?php
+    $query = mysqli_query($con,"SELECT p.post_id,p.post_img,p.post_text,u.name FROM posts p JOIN users u ON p.user_id = u.id WHERE p.user_id in (SELECT friend2 FROM friends WHERE friend1 = '$id') ORDER BY post_id DESC") or die("could not find posts");
+      
+    while ($row = mysqli_fetch_assoc($query)):
+      
+  ?>
+                                                                        <div class="item">
+                                                                                <div class="container">
+                                                                                   
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-3 col-md-offset-2">
+                                                                                            <h6><?php echo $row["name"]?> added a post</h6>   
+                                                                                        </div>
+                                                                                        <div class="col-md-6 col-md-offset-1">
+                                                                                                <button onclick = "send_like(this)" data-postid = "<?php echo $row['post_id']?>" data-id = "<?php echo $id?>" id = "<?php echo 'like'.$row['post_id']?>" class="btn btn-default btn-sm"><?php
+  $post_id =  $row['post_id'];                                                                                             
+  $query5 = mysqli_query($con,"SELECT * FROM likes Where user_id = '$id' and post_id = '$post_id'")  or die("bhai bhai bahi");
+  if(mysqli_num_rows($query5) == 0)
+  {
+    echo "like";
+  }
+  else
+  {
+    echo "liked";
+  }
+
+
+                                                                                                ?></button>
+
+                                                                                                <span id = "<?php echo 'numlike'.$row['post_id']?>"><?php
+  $post_id = $row["post_id"];
+      $query2 = mysqli_query($con,"SELECT count(post_id) as count_likes from likes where post_id = '$post_id'") or die("could not select from database");
+      $row1 = mysqli_fetch_assoc($query2);
+  echo $row1["count_likes"]
+  ?></span>
+                                                                                                <button class="btn btn-primary btn-sm">Comment</button>    
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-md-6 col-md-offset-2">
+                                                                                                <p><?php echo $row["post_text"]?></p>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <?php
+  
+  if($row["post_img"] != "")
+  {
+    echo '<div class="row">
+                                                                                            <div class="col-md-6 col-md-offset-2">
+                                                                                                    <img src="photos/'.$row["post_img"].'" class="image-thumnail img-responsive">
+                                                                                            </div>
+                                                                                        </div>';
+  }
+  ?>
+                                                                                        
+                                                                                    </div>
+                                                                            </div>
+                                                                      
+
+                                                                      <?php
+  endwhile;?>
+
                                                                       </div>
+
+                                                                      
                                                                     
                                                                       <!-- Controls -->
                                                                       <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
@@ -282,6 +376,7 @@ else
                                           <div class="row">
                                             <div class="col-md-5 col-md-offset-3">
                                               <p><a class="btn btn-simple">Faseih Saad</a>send you a friend request &nbsp;<button class="btn btn-fill btn-info">Accept</button></p>
+                                              <p id = "notifs"></p>
                                             </div>
                                           </div>
                                         </div>
@@ -342,44 +437,56 @@ else
                             </div>
                           </div>
 <script>
+
+  var x = document.getElementById("user");
+var user_id = x.getAttribute("data-id");
     gsdk.initPopovers();
     $("[data-toggle=modal]").click(function(){
         var name=$(this).text();
         $('#myModal h6').text(name);
     });
-	$(document).ready(function(){
-		$('#search').keyup(function(){
-			var results = "";
-            var searchField = $('#search').val();
-			if(searchField != "")
-			{
-				var regex = new RegExp(searchField, "i");
-            $.getJSON('files/data.json', function(data) {
-				
-				var x = data["users"];
-				
-				
-				for(var i = 0; i < x.length;i++)
-				{
-				
-                if (x[i].search(regex) != -1) {
-                  results += x[i] + "<br />";
-				  
-                  }
-                  
-                }
-				$('#results').html(results);
-              });
+	
+
+  $(document).ready(function(){
+    $('#search').keyup(function(){
+      var results = "";
+      var searchField = $('#search').val();
+      
+      if(searchField != "")
+      {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          
+        var res = this.responseText;
+
+        if(res != "")
+        {
+          $('#suggested_search').show();
+          $('#suggested_search').html(res);
+        }
+        else
+        {
+          $('#suggested_search').show();
+        }
+        
+        }
+        };
+        xhttp.open("GET", "search.php?user_id=" + user_id + "&sval=" + searchField, true);
+        xhttp.send();
+        
               
-			}
-			else
-			{
-			$('#results').html(results);
-			}
+      }
+      else
+      {
+        $('#suggested_search').hide();
+        
+      }
             
               
             }); 
         });
+
 
   var id = -1;
   function set_id(x)
@@ -423,6 +530,52 @@ function show_message(x)
   }
   
 }
+
+
+
+function show_notifications()
+{
+  //alert();
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        //alert(this.responseText);
+        document.getElementById("notif").innerHTML = this.responseText;
+    
+            }
+      };
+      xhttp.open("GET", "notifications.php?id="+user_id, true);
+      xhttp.send();
+}
+
+
+function send_like(x)
+{
+  id = x.getAttribute("data-id");
+  post_id = x.getAttribute("data-postid");
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var res = this.responseText;
+        if(res != 'liked')
+        {
+          document.getElementById("like"+post_id).innerHTML = "liked";
+          var lm = parseInt(document.getElementById("numlike"+post_id).innerHTML);
+          lm = lm + 1;
+          document.getElementById("numlike"+post_id).innerHTML = lm;
+        }
+      }
+           
+      };
+      xhttp.open("GET", "likes.php?id=" + id+"&post_id=" + post_id, true);
+      xhttp.send();
+
+
+      
+
+}
+
+setInterval(show_notifications,1000);
     setInterval(show_message,200);
 </script>
 </body>

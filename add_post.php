@@ -32,7 +32,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['name']))
                 if(move_uploaded_file($profile_location,$des))
                 {
 
-                    $query = mysqli_query($con,"INSERT  INTO posts(user_id,post_text,post_img)VALUES('$id','$text','$profile_name')") or die("could not update database");
+                    $query = mysqli_query($con,"INSERT  INTO posts(user_id,post_text,post_img)VALUES('$id','$text','$profile_name')") or die("mysqli_error()");
                     $message = "Profile picture uploaded successfully";
                     
                 }
@@ -60,7 +60,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['name']))
         }
         else
         {
-            $query = mysqli_query($con,"INSERT INTO posts(user_id,post_text,post_img)VALUES('$id','$text','')") or die("could not add post");
+            $query = mysqli_query($con,"INSERT INTO posts(user_id,post_text,post_img)VALUES('$id','$text','')") or die(mysqli_error());
             $message = "Post added successfully";
         }
 
